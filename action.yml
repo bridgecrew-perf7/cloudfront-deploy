@@ -1,0 +1,37 @@
+name: 'Cloudfront Deploy'
+description: 'Automatic Cloudfront deployment'
+branding:
+  icon: 'cloud'
+  color: 'gray-dark'
+inputs:
+  environment:
+    description: 'Environment to deploy'
+    required: true
+  bucket-name:
+    description: 'Bucket to receive deployment assets'
+    required: true
+  cloudfront-id:
+    description: 'Cloudfront ID'
+    required: true
+  source:
+    description: 'Source'
+    required: true
+  entrypoint:
+    description: 'cloudfront-deploy entrypoint'
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - name: "Run cloudfront-deploy"
+      shell: bash
+      run: |
+        set -eux
+        entrypoint='/gympass/cloudfront-deploy'
+        if [ -n '${{ inputs.entrypoint }}' ]; then entrypoint="${{ inputs.entrypoint }}"; fi
+        cmd=("$entrypoint" --github-token ${{ github.token }})
+        if [ -n '${{ inputs.environment }}' ]; then cmd+=(--environment ${{ inputs.environment }}); fi
+        if [ -n '${{ inputs.bucket-name }}' ]; then cmd+=(--bucket-name ${{ inputs.bucket-name }}); fi
+        if [ -n '${{ inputs.cloudfront-id }}' ]; then cmd+=(--cloudfront-id ${{ inputs.cloudfront-id }}); fi
+        if [ -n '${{ inputs.source }}' ]; then cmd+=(--source ${{ inputs.source }}); fi
+
+        "${cmd[@]}"
