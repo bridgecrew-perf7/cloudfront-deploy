@@ -16,6 +16,9 @@ inputs:
   source:
     description: 'Source'
     required: true
+  load-envs-from:
+    description: 'Source file containing environments variables'
+    required: false
   entrypoint:
     description: 'cloudfront-deploy entrypoint'
     required: false
@@ -33,5 +36,6 @@ runs:
         if [ -n '${{ inputs.bucket-name }}' ]; then cmd+=(--bucket-name ${{ inputs.bucket-name }}); fi
         if [ -n '${{ inputs.cloudfront-id }}' ]; then cmd+=(--cloudfront-id ${{ inputs.cloudfront-id }}); fi
         if [ -n '${{ inputs.source }}' ]; then cmd+=(--source ${{ inputs.source }}); fi
+        if [ -n '${{ inputs.load-envs-from }}' ]; then cmd+=(--load-envs-from ${{ inputs.load-envs-from }}); fi
 
         "${cmd[@]}"
