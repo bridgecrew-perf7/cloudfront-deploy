@@ -22,6 +22,9 @@ inputs:
   entrypoint:
     description: 'cloudfront-deploy entrypoint'
     required: false
+  working-directory:
+    description: 'Alternative working directory to run this action from'
+    required: false
 runs:
   using: "composite"
   steps:
@@ -37,5 +40,6 @@ runs:
         if [ -n '${{ inputs.cloudfront-id }}' ]; then cmd+=(--cloudfront-id ${{ inputs.cloudfront-id }}); fi
         if [ -n '${{ inputs.source }}' ]; then cmd+=(--source ${{ inputs.source }}); fi
         if [ -n '${{ inputs.load-envs-from }}' ]; then cmd+=(--load-envs-from ${{ inputs.load-envs-from }}); fi
+        if [ -n '${{ inputs.working-directory }}' ]; then cmd+=(--working-directory ${{ inputs.working-directory }}); fi
 
         "${cmd[@]}"
